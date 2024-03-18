@@ -1,5 +1,6 @@
 use crate::error::UpstreamError;
 
+#[cfg(feature = "json")]
 pub async fn deserialize<T: serde::de::DeserializeOwned>(
     resp: reqwest::Response,
 ) -> Result<T, UpstreamError> {
