@@ -19,12 +19,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let variant_result = client
         .evaluation
         .variant(&EvaluationRequest {
-            request_id: None,
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag1".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
@@ -34,12 +34,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let boolean_result = client
         .evaluation
         .boolean(&EvaluationRequest {
-            request_id: None,
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag_boolean".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
@@ -48,29 +48,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let requests: Vec<EvaluationRequest> = vec![
         EvaluationRequest {
-            request_id: None,
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag1".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         },
         EvaluationRequest {
-            request_id: None,
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag_boolean".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         },
     ];
 
     let batch_result = client
         .evaluation
         .batch(&BatchEvaluationRequest {
-            request_id: None,
+            request_id: "".into(),
             requests,
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
@@ -81,7 +81,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .evaluation
         .list_flags(&EvaluationNamespaceSnapshotRequest {
             key: "default".into(),
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();

@@ -7,25 +7,24 @@ impl serde::Serialize for BatchEvaluationRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.request_id.is_some() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         if !self.requests.is_empty() {
             len += 1;
         }
-        if self.reference.is_some() {
+        if !self.reference.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.BatchEvaluationRequest", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.BatchEvaluationRequest", len)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         if !self.requests.is_empty() {
             struct_ser.serialize_field("requests", &self.requests)?;
         }
-        if let Some(v) = self.reference.as_ref() {
-            struct_ser.serialize_field("reference", v)?;
+        if !self.reference.is_empty() {
+            struct_ser.serialize_field("reference", &self.reference)?;
         }
         struct_ser.end()
     }
@@ -36,7 +35,12 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationRequest {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["request_id", "requestId", "requests", "reference"];
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "requests",
+            "reference",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -54,10 +58,7 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationRequest {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -85,12 +86,9 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationRequest {
                 formatter.write_str("struct flipt.evaluation.BatchEvaluationRequest")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<BatchEvaluationRequest, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BatchEvaluationRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
                 let mut requests__ = None;
@@ -101,7 +99,7 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationRequest {
                             if request_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_id__ = map_.next_value()?;
+                            request_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Requests => {
                             if requests__.is_some() {
@@ -113,22 +111,18 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationRequest {
                             if reference__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("reference"));
                             }
-                            reference__ = map_.next_value()?;
+                            reference__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(BatchEvaluationRequest {
-                    request_id: request_id__,
+                    request_id: request_id__.unwrap_or_default(),
                     requests: requests__.unwrap_or_default(),
-                    reference: reference__,
+                    reference: reference__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.BatchEvaluationRequest",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.BatchEvaluationRequest", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BatchEvaluationResponse {
@@ -139,7 +133,7 @@ impl serde::Serialize for BatchEvaluationResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.request_id.is_some() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         if !self.responses.is_empty() {
@@ -148,10 +142,9 @@ impl serde::Serialize for BatchEvaluationResponse {
         if self.request_duration_millis != 0. {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.BatchEvaluationResponse", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.BatchEvaluationResponse", len)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         if !self.responses.is_empty() {
             struct_ser.serialize_field("responses", &self.responses)?;
@@ -192,10 +185,7 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationResponse {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -207,9 +197,7 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationResponse {
                         match value {
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             "responses" => Ok(GeneratedField::Responses),
-                            "requestDurationMillis" | "request_duration_millis" => {
-                                Ok(GeneratedField::RequestDurationMillis)
-                            }
+                            "requestDurationMillis" | "request_duration_millis" => Ok(GeneratedField::RequestDurationMillis),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -225,12 +213,9 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationResponse {
                 formatter.write_str("struct flipt.evaluation.BatchEvaluationResponse")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<BatchEvaluationResponse, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BatchEvaluationResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
                 let mut responses__ = None;
@@ -241,7 +226,7 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationResponse {
                             if request_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_id__ = map_.next_value()?;
+                            request_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Responses => {
                             if responses__.is_some() {
@@ -251,29 +236,22 @@ impl<'de> serde::Deserialize<'de> for BatchEvaluationResponse {
                         }
                         GeneratedField::RequestDurationMillis => {
                             if request_duration_millis__.is_some() {
-                                return Err(serde::de::Error::duplicate_field(
-                                    "requestDurationMillis",
-                                ));
+                                return Err(serde::de::Error::duplicate_field("requestDurationMillis"));
                             }
-                            request_duration_millis__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            request_duration_millis__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                     }
                 }
                 Ok(BatchEvaluationResponse {
-                    request_id: request_id__,
+                    request_id: request_id__.unwrap_or_default(),
                     responses: responses__.unwrap_or_default(),
                     request_duration_millis: request_duration_millis__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.BatchEvaluationResponse",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.BatchEvaluationResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for BooleanEvaluationResponse {
@@ -302,15 +280,13 @@ impl serde::Serialize for BooleanEvaluationResponse {
         if !self.flag_key.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.BooleanEvaluationResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.BooleanEvaluationResponse", len)?;
         if self.enabled {
             struct_ser.serialize_field("enabled", &self.enabled)?;
         }
         if self.reason != 0 {
-            let v = EvaluationReason::try_from(self.reason).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.reason))
-            })?;
+            let v = EvaluationReason::try_from(self.reason)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.reason)))?;
             struct_ser.serialize_field("reason", &v)?;
         }
         if !self.request_id.is_empty() {
@@ -365,10 +341,7 @@ impl<'de> serde::Deserialize<'de> for BooleanEvaluationResponse {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -381,9 +354,7 @@ impl<'de> serde::Deserialize<'de> for BooleanEvaluationResponse {
                             "enabled" => Ok(GeneratedField::Enabled),
                             "reason" => Ok(GeneratedField::Reason),
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "requestDurationMillis" | "request_duration_millis" => {
-                                Ok(GeneratedField::RequestDurationMillis)
-                            }
+                            "requestDurationMillis" | "request_duration_millis" => Ok(GeneratedField::RequestDurationMillis),
                             "timestamp" => Ok(GeneratedField::Timestamp),
                             "flagKey" | "flag_key" => Ok(GeneratedField::FlagKey),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -401,12 +372,9 @@ impl<'de> serde::Deserialize<'de> for BooleanEvaluationResponse {
                 formatter.write_str("struct flipt.evaluation.BooleanEvaluationResponse")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<BooleanEvaluationResponse, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<BooleanEvaluationResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut enabled__ = None;
                 let mut reason__ = None;
@@ -436,14 +404,11 @@ impl<'de> serde::Deserialize<'de> for BooleanEvaluationResponse {
                         }
                         GeneratedField::RequestDurationMillis => {
                             if request_duration_millis__.is_some() {
-                                return Err(serde::de::Error::duplicate_field(
-                                    "requestDurationMillis",
-                                ));
+                                return Err(serde::de::Error::duplicate_field("requestDurationMillis"));
                             }
-                            request_duration_millis__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            request_duration_millis__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                         GeneratedField::Timestamp => {
                             if timestamp__.is_some() {
@@ -469,11 +434,7 @@ impl<'de> serde::Deserialize<'de> for BooleanEvaluationResponse {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.BooleanEvaluationResponse",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.BooleanEvaluationResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ErrorEvaluationReason {
@@ -483,8 +444,8 @@ impl serde::Serialize for ErrorEvaluationReason {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Unknown => "UNKNOWN_ERROR_EVALUATION_REASON",
-            Self::NotFound => "NOT_FOUND_ERROR_EVALUATION_REASON",
+            Self::UnknownErrorEvaluationReason => "UNKNOWN_ERROR_EVALUATION_REASON",
+            Self::NotFoundErrorEvaluationReason => "NOT_FOUND_ERROR_EVALUATION_REASON",
         };
         serializer.serialize_str(variant)
     }
@@ -538,8 +499,8 @@ impl<'de> serde::Deserialize<'de> for ErrorEvaluationReason {
                 E: serde::de::Error,
             {
                 match value {
-                    "UNKNOWN_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::Unknown),
-                    "NOT_FOUND_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::NotFound),
+                    "UNKNOWN_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::UnknownErrorEvaluationReason),
+                    "NOT_FOUND_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::NotFoundErrorEvaluationReason),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -564,8 +525,7 @@ impl serde::Serialize for ErrorEvaluationResponse {
         if self.reason != 0 {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.ErrorEvaluationResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.ErrorEvaluationResponse", len)?;
         if !self.flag_key.is_empty() {
             struct_ser.serialize_field("flagKey", &self.flag_key)?;
         }
@@ -573,9 +533,8 @@ impl serde::Serialize for ErrorEvaluationResponse {
             struct_ser.serialize_field("namespaceKey", &self.namespace_key)?;
         }
         if self.reason != 0 {
-            let v = ErrorEvaluationReason::try_from(self.reason).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.reason))
-            })?;
+            let v = ErrorEvaluationReason::try_from(self.reason)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.reason)))?;
             struct_ser.serialize_field("reason", &v)?;
         }
         struct_ser.end()
@@ -611,10 +570,7 @@ impl<'de> serde::Deserialize<'de> for ErrorEvaluationResponse {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -642,12 +598,9 @@ impl<'de> serde::Deserialize<'de> for ErrorEvaluationResponse {
                 formatter.write_str("struct flipt.evaluation.ErrorEvaluationResponse")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<ErrorEvaluationResponse, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ErrorEvaluationResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut flag_key__ = None;
                 let mut namespace_key__ = None;
@@ -681,11 +634,7 @@ impl<'de> serde::Deserialize<'de> for ErrorEvaluationResponse {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.ErrorEvaluationResponse",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.ErrorEvaluationResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationConstraint {
@@ -711,15 +660,13 @@ impl serde::Serialize for EvaluationConstraint {
         if !self.value.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationConstraint", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationConstraint", len)?;
         if !self.id.is_empty() {
             struct_ser.serialize_field("id", &self.id)?;
         }
         if self.r#type != 0 {
-            let v = EvaluationConstraintComparisonType::try_from(self.r#type).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.r#type))
-            })?;
+            let v = EvaluationConstraintComparisonType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
             struct_ser.serialize_field("type", &v)?;
         }
         if !self.property.is_empty() {
@@ -740,7 +687,13 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraint {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["id", "type", "property", "operator", "value"];
+        const FIELDS: &[&str] = &[
+            "id",
+            "type",
+            "property",
+            "operator",
+            "value",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -760,10 +713,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraint {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -793,12 +743,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraint {
                 formatter.write_str("struct flipt.evaluation.EvaluationConstraint")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationConstraint, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationConstraint, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut id__ = None;
                 let mut r#type__ = None;
@@ -817,9 +764,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraint {
                             if r#type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("type"));
                             }
-                            r#type__ = Some(
-                                map_.next_value::<EvaluationConstraintComparisonType>()? as i32,
-                            );
+                            r#type__ = Some(map_.next_value::<EvaluationConstraintComparisonType>()? as i32);
                         }
                         GeneratedField::Property => {
                             if property__.is_some() {
@@ -850,11 +795,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraint {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationConstraint",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationConstraint", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationConstraintComparisonType {
@@ -927,24 +868,12 @@ impl<'de> serde::Deserialize<'de> for EvaluationConstraintComparisonType {
                 E: serde::de::Error,
             {
                 match value {
-                    "UNKNOWN_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::UnknownConstraintComparisonType)
-                    }
-                    "STRING_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::StringConstraintComparisonType)
-                    }
-                    "NUMBER_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::NumberConstraintComparisonType)
-                    }
-                    "BOOLEAN_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::BooleanConstraintComparisonType)
-                    }
-                    "DATETIME_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::DatetimeConstraintComparisonType)
-                    }
-                    "ENTITY_ID_CONSTRAINT_COMPARISON_TYPE" => {
-                        Ok(EvaluationConstraintComparisonType::EntityIdConstraintComparisonType)
-                    }
+                    "UNKNOWN_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::UnknownConstraintComparisonType),
+                    "STRING_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::StringConstraintComparisonType),
+                    "NUMBER_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::NumberConstraintComparisonType),
+                    "BOOLEAN_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::BooleanConstraintComparisonType),
+                    "DATETIME_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::DatetimeConstraintComparisonType),
+                    "ENTITY_ID_CONSTRAINT_COMPARISON_TYPE" => Ok(EvaluationConstraintComparisonType::EntityIdConstraintComparisonType),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -978,8 +907,7 @@ impl serde::Serialize for EvaluationDistribution {
         if self.rollout != 0. {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationDistribution", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationDistribution", len)?;
         if !self.id.is_empty() {
             struct_ser.serialize_field("id", &self.id)?;
         }
@@ -1039,10 +967,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationDistribution {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1056,9 +981,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationDistribution {
                             "ruleId" | "rule_id" => Ok(GeneratedField::RuleId),
                             "variantId" | "variant_id" => Ok(GeneratedField::VariantId),
                             "variantKey" | "variant_key" => Ok(GeneratedField::VariantKey),
-                            "variantAttachment" | "variant_attachment" => {
-                                Ok(GeneratedField::VariantAttachment)
-                            }
+                            "variantAttachment" | "variant_attachment" => Ok(GeneratedField::VariantAttachment),
                             "rollout" => Ok(GeneratedField::Rollout),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -1075,12 +998,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationDistribution {
                 formatter.write_str("struct flipt.evaluation.EvaluationDistribution")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationDistribution, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationDistribution, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut id__ = None;
                 let mut rule_id__ = None;
@@ -1124,10 +1044,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationDistribution {
                             if rollout__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("rollout"));
                             }
-                            rollout__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            rollout__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                     }
                 }
@@ -1141,11 +1060,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationDistribution {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationDistribution",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationDistribution", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationFlag {
@@ -1197,9 +1112,8 @@ impl serde::Serialize for EvaluationFlag {
             struct_ser.serialize_field("enabled", &self.enabled)?;
         }
         if self.r#type != 0 {
-            let v = EvaluationFlagType::try_from(self.r#type).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.r#type))
-            })?;
+            let v = EvaluationFlagType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
             struct_ser.serialize_field("type", &v)?;
         }
         if let Some(v) = self.created_at.as_ref() {
@@ -1259,10 +1173,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationFlag {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1297,8 +1208,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationFlag {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationFlag, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut key__ = None;
                 let mut name__ = None;
@@ -1402,7 +1313,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationFlagType {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["VARIANT_FLAG_TYPE", "BOOLEAN_FLAG_TYPE"];
+        const FIELDS: &[&str] = &[
+            "VARIANT_FLAG_TYPE",
+            "BOOLEAN_FLAG_TYPE",
+        ];
 
         struct GeneratedVisitor;
 
@@ -1462,8 +1376,7 @@ impl serde::Serialize for EvaluationNamespace {
         if !self.key.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationNamespace", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationNamespace", len)?;
         if !self.key.is_empty() {
             struct_ser.serialize_field("key", &self.key)?;
         }
@@ -1476,7 +1389,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespace {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["key"];
+        const FIELDS: &[&str] = &[
+            "key",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -1492,10 +1407,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespace {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1522,8 +1434,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespace {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationNamespace, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut key__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -1541,11 +1453,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespace {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationNamespace",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationNamespace", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationNamespaceSnapshot {
@@ -1562,8 +1470,7 @@ impl serde::Serialize for EvaluationNamespaceSnapshot {
         if !self.flags.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationNamespaceSnapshot", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationNamespaceSnapshot", len)?;
         if let Some(v) = self.namespace.as_ref() {
             struct_ser.serialize_field("namespace", v)?;
         }
@@ -1579,7 +1486,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshot {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["namespace", "flags"];
+        const FIELDS: &[&str] = &[
+            "namespace",
+            "flags",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -1596,10 +1506,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshot {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1626,12 +1533,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshot {
                 formatter.write_str("struct flipt.evaluation.EvaluationNamespaceSnapshot")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationNamespaceSnapshot, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationNamespaceSnapshot, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut namespace__ = None;
                 let mut flags__ = None;
@@ -1657,11 +1561,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshot {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationNamespaceSnapshot",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationNamespaceSnapshot", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationNamespaceSnapshotRequest {
@@ -1675,16 +1575,15 @@ impl serde::Serialize for EvaluationNamespaceSnapshotRequest {
         if !self.key.is_empty() {
             len += 1;
         }
-        if self.reference.is_some() {
+        if !self.reference.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer
-            .serialize_struct("flipt.evaluation.EvaluationNamespaceSnapshotRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationNamespaceSnapshotRequest", len)?;
         if !self.key.is_empty() {
             struct_ser.serialize_field("key", &self.key)?;
         }
-        if let Some(v) = self.reference.as_ref() {
-            struct_ser.serialize_field("reference", v)?;
+        if !self.reference.is_empty() {
+            struct_ser.serialize_field("reference", &self.reference)?;
         }
         struct_ser.end()
     }
@@ -1695,7 +1594,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshotRequest {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["key", "reference"];
+        const FIELDS: &[&str] = &[
+            "key",
+            "reference",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -1712,10 +1614,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshotRequest {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1742,12 +1641,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshotRequest {
                 formatter.write_str("struct flipt.evaluation.EvaluationNamespaceSnapshotRequest")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationNamespaceSnapshotRequest, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationNamespaceSnapshotRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut key__ = None;
                 let mut reference__ = None;
@@ -1763,21 +1659,17 @@ impl<'de> serde::Deserialize<'de> for EvaluationNamespaceSnapshotRequest {
                             if reference__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("reference"));
                             }
-                            reference__ = map_.next_value()?;
+                            reference__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(EvaluationNamespaceSnapshotRequest {
                     key: key__.unwrap_or_default(),
-                    reference: reference__,
+                    reference: reference__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationNamespaceSnapshotRequest",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationNamespaceSnapshotRequest", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationReason {
@@ -1787,10 +1679,10 @@ impl serde::Serialize for EvaluationReason {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Unknown => "UNKNOWN_EVALUATION_REASON",
-            Self::FlagDisabled => "FLAG_DISABLED_EVALUATION_REASON",
-            Self::Match => "MATCH_EVALUATION_REASON",
-            Self::Default => "DEFAULT_EVALUATION_REASON",
+            Self::UnknownEvaluationReason => "UNKNOWN_EVALUATION_REASON",
+            Self::FlagDisabledEvaluationReason => "FLAG_DISABLED_EVALUATION_REASON",
+            Self::MatchEvaluationReason => "MATCH_EVALUATION_REASON",
+            Self::DefaultEvaluationReason => "DEFAULT_EVALUATION_REASON",
         };
         serializer.serialize_str(variant)
     }
@@ -1846,10 +1738,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationReason {
                 E: serde::de::Error,
             {
                 match value {
-                    "UNKNOWN_EVALUATION_REASON" => Ok(EvaluationReason::Unknown),
-                    "FLAG_DISABLED_EVALUATION_REASON" => Ok(EvaluationReason::FlagDisabled),
-                    "MATCH_EVALUATION_REASON" => Ok(EvaluationReason::Match),
-                    "DEFAULT_EVALUATION_REASON" => Ok(EvaluationReason::Default),
+                    "UNKNOWN_EVALUATION_REASON" => Ok(EvaluationReason::UnknownEvaluationReason),
+                    "FLAG_DISABLED_EVALUATION_REASON" => Ok(EvaluationReason::FlagDisabledEvaluationReason),
+                    "MATCH_EVALUATION_REASON" => Ok(EvaluationReason::MatchEvaluationReason),
+                    "DEFAULT_EVALUATION_REASON" => Ok(EvaluationReason::DefaultEvaluationReason),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -1865,7 +1757,7 @@ impl serde::Serialize for EvaluationRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.request_id.is_some() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         if !self.namespace_key.is_empty() {
@@ -1880,13 +1772,12 @@ impl serde::Serialize for EvaluationRequest {
         if !self.context.is_empty() {
             len += 1;
         }
-        if self.reference.is_some() {
+        if !self.reference.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationRequest", len)?;
-        if let Some(v) = self.request_id.as_ref() {
-            struct_ser.serialize_field("requestId", v)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationRequest", len)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         if !self.namespace_key.is_empty() {
             struct_ser.serialize_field("namespaceKey", &self.namespace_key)?;
@@ -1900,8 +1791,8 @@ impl serde::Serialize for EvaluationRequest {
         if !self.context.is_empty() {
             struct_ser.serialize_field("context", &self.context)?;
         }
-        if let Some(v) = self.reference.as_ref() {
-            struct_ser.serialize_field("reference", v)?;
+        if !self.reference.is_empty() {
+            struct_ser.serialize_field("reference", &self.reference)?;
         }
         struct_ser.end()
     }
@@ -1944,10 +1835,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRequest {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -1979,8 +1867,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationRequest {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationRequest, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut request_id__ = None;
                 let mut namespace_key__ = None;
@@ -1994,7 +1882,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRequest {
                             if request_id__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_id__ = map_.next_value()?;
+                            request_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::NamespaceKey => {
                             if namespace_key__.is_some() {
@@ -2018,31 +1906,29 @@ impl<'de> serde::Deserialize<'de> for EvaluationRequest {
                             if context__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("context"));
                             }
-                            context__ = Some(map_.next_value::<std::collections::HashMap<_, _>>()?);
+                            context__ = Some(
+                                map_.next_value::<std::collections::HashMap<_, _>>()?
+                            );
                         }
                         GeneratedField::Reference => {
                             if reference__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("reference"));
                             }
-                            reference__ = map_.next_value()?;
+                            reference__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(EvaluationRequest {
-                    request_id: request_id__,
+                    request_id: request_id__.unwrap_or_default(),
                     namespace_key: namespace_key__.unwrap_or_default(),
                     flag_key: flag_key__.unwrap_or_default(),
                     entity_id: entity_id__.unwrap_or_default(),
                     context: context__.unwrap_or_default(),
-                    reference: reference__,
+                    reference: reference__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationRequest",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationRequest", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationResponse {
@@ -2059,12 +1945,10 @@ impl serde::Serialize for EvaluationResponse {
         if self.response.is_some() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationResponse", len)?;
         if self.r#type != 0 {
-            let v = EvaluationResponseType::try_from(self.r#type).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.r#type))
-            })?;
+            let v = EvaluationResponseType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
             struct_ser.serialize_field("type", &v)?;
         }
         if let Some(v) = self.response.as_ref() {
@@ -2116,10 +2000,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponse {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -2130,12 +2011,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponse {
                     {
                         match value {
                             "type" => Ok(GeneratedField::Type),
-                            "booleanResponse" | "boolean_response" => {
-                                Ok(GeneratedField::BooleanResponse)
-                            }
-                            "variantResponse" | "variant_response" => {
-                                Ok(GeneratedField::VariantResponse)
-                            }
+                            "booleanResponse" | "boolean_response" => Ok(GeneratedField::BooleanResponse),
+                            "variantResponse" | "variant_response" => Ok(GeneratedField::VariantResponse),
                             "errorResponse" | "error_response" => Ok(GeneratedField::ErrorResponse),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -2153,8 +2030,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponse {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationResponse, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut r#type__ = None;
                 let mut response__ = None;
@@ -2170,25 +2047,22 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponse {
                             if response__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("booleanResponse"));
                             }
-                            response__ = map_
-                                .next_value::<::std::option::Option<_>>()?
-                                .map(evaluation_response::Response::BooleanResponse);
+                            response__ = map_.next_value::<::std::option::Option<_>>()?.map(evaluation_response::Response::BooleanResponse)
+;
                         }
                         GeneratedField::VariantResponse => {
                             if response__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("variantResponse"));
                             }
-                            response__ = map_
-                                .next_value::<::std::option::Option<_>>()?
-                                .map(evaluation_response::Response::VariantResponse);
+                            response__ = map_.next_value::<::std::option::Option<_>>()?.map(evaluation_response::Response::VariantResponse)
+;
                         }
                         GeneratedField::ErrorResponse => {
                             if response__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("errorResponse"));
                             }
-                            response__ = map_
-                                .next_value::<::std::option::Option<_>>()?
-                                .map(evaluation_response::Response::ErrorResponse);
+                            response__ = map_.next_value::<::std::option::Option<_>>()?.map(evaluation_response::Response::ErrorResponse)
+;
                         }
                     }
                 }
@@ -2198,11 +2072,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponse {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationResponse",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationResponseType {
@@ -2212,9 +2082,9 @@ impl serde::Serialize for EvaluationResponseType {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::Variant => "VARIANT_EVALUATION_RESPONSE_TYPE",
-            Self::Boolean => "BOOLEAN_EVALUATION_RESPONSE_TYPE",
-            Self::Error => "ERROR_EVALUATION_RESPONSE_TYPE",
+            Self::VariantEvaluationResponseType => "VARIANT_EVALUATION_RESPONSE_TYPE",
+            Self::BooleanEvaluationResponseType => "BOOLEAN_EVALUATION_RESPONSE_TYPE",
+            Self::ErrorEvaluationResponseType => "ERROR_EVALUATION_RESPONSE_TYPE",
         };
         serializer.serialize_str(variant)
     }
@@ -2269,9 +2139,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponseType {
                 E: serde::de::Error,
             {
                 match value {
-                    "VARIANT_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Variant),
-                    "BOOLEAN_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Boolean),
-                    "ERROR_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Error),
+                    "VARIANT_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::VariantEvaluationResponseType),
+                    "BOOLEAN_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::BooleanEvaluationResponseType),
+                    "ERROR_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::ErrorEvaluationResponseType),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -2296,12 +2166,10 @@ impl serde::Serialize for EvaluationRollout {
         if self.rule.is_some() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationRollout", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationRollout", len)?;
         if self.r#type != 0 {
-            let v = EvaluationRolloutType::try_from(self.r#type).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.r#type))
-            })?;
+            let v = EvaluationRolloutType::try_from(self.r#type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.r#type)))?;
             struct_ser.serialize_field("type", &v)?;
         }
         if self.rank != 0 {
@@ -2326,7 +2194,12 @@ impl<'de> serde::Deserialize<'de> for EvaluationRollout {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["type", "rank", "segment", "threshold"];
+        const FIELDS: &[&str] = &[
+            "type",
+            "rank",
+            "segment",
+            "threshold",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -2345,10 +2218,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRollout {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -2378,8 +2248,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationRollout {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationRollout, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut r#type__ = None;
                 let mut rank__ = None;
@@ -2396,26 +2266,23 @@ impl<'de> serde::Deserialize<'de> for EvaluationRollout {
                             if rank__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("rank"));
                             }
-                            rank__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            rank__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                         GeneratedField::Segment => {
                             if rule__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("segment"));
                             }
-                            rule__ = map_
-                                .next_value::<::std::option::Option<_>>()?
-                                .map(evaluation_rollout::Rule::Segment);
+                            rule__ = map_.next_value::<::std::option::Option<_>>()?.map(evaluation_rollout::Rule::Segment)
+;
                         }
                         GeneratedField::Threshold => {
                             if rule__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("threshold"));
                             }
-                            rule__ = map_
-                                .next_value::<::std::option::Option<_>>()?
-                                .map(evaluation_rollout::Rule::Threshold);
+                            rule__ = map_.next_value::<::std::option::Option<_>>()?.map(evaluation_rollout::Rule::Threshold)
+;
                         }
                     }
                 }
@@ -2426,11 +2293,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRollout {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationRollout",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationRollout", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationRolloutSegment {
@@ -2450,15 +2313,13 @@ impl serde::Serialize for EvaluationRolloutSegment {
         if !self.segments.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationRolloutSegment", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationRolloutSegment", len)?;
         if self.value {
             struct_ser.serialize_field("value", &self.value)?;
         }
         if self.segment_operator != 0 {
-            let v = EvaluationSegmentOperator::try_from(self.segment_operator).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.segment_operator))
-            })?;
+            let v = EvaluationSegmentOperator::try_from(self.segment_operator)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.segment_operator)))?;
             struct_ser.serialize_field("segmentOperator", &v)?;
         }
         if !self.segments.is_empty() {
@@ -2473,7 +2334,12 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["value", "segment_operator", "segmentOperator", "segments"];
+        const FIELDS: &[&str] = &[
+            "value",
+            "segment_operator",
+            "segmentOperator",
+            "segments",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -2491,10 +2357,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -2505,9 +2368,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
                     {
                         match value {
                             "value" => Ok(GeneratedField::Value),
-                            "segmentOperator" | "segment_operator" => {
-                                Ok(GeneratedField::SegmentOperator)
-                            }
+                            "segmentOperator" | "segment_operator" => Ok(GeneratedField::SegmentOperator),
                             "segments" => Ok(GeneratedField::Segments),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -2524,12 +2385,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
                 formatter.write_str("struct flipt.evaluation.EvaluationRolloutSegment")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationRolloutSegment, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationRolloutSegment, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut value__ = None;
                 let mut segment_operator__ = None;
@@ -2546,8 +2404,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
                             if segment_operator__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("segmentOperator"));
                             }
-                            segment_operator__ =
-                                Some(map_.next_value::<EvaluationSegmentOperator>()? as i32);
+                            segment_operator__ = Some(map_.next_value::<EvaluationSegmentOperator>()? as i32);
                         }
                         GeneratedField::Segments => {
                             if segments__.is_some() {
@@ -2564,11 +2421,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutSegment {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationRolloutSegment",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationRolloutSegment", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationRolloutThreshold {
@@ -2585,8 +2438,7 @@ impl serde::Serialize for EvaluationRolloutThreshold {
         if self.value {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationRolloutThreshold", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationRolloutThreshold", len)?;
         if self.percentage != 0. {
             struct_ser.serialize_field("percentage", &self.percentage)?;
         }
@@ -2602,7 +2454,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutThreshold {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["percentage", "value"];
+        const FIELDS: &[&str] = &[
+            "percentage",
+            "value",
+        ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
@@ -2619,10 +2474,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutThreshold {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -2649,12 +2501,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutThreshold {
                 formatter.write_str("struct flipt.evaluation.EvaluationRolloutThreshold")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<EvaluationRolloutThreshold, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationRolloutThreshold, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut percentage__ = None;
                 let mut value__ = None;
@@ -2664,10 +2513,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutThreshold {
                             if percentage__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("percentage"));
                             }
-                            percentage__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            percentage__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                         GeneratedField::Value => {
                             if value__.is_some() {
@@ -2683,11 +2531,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRolloutThreshold {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationRolloutThreshold",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationRolloutThreshold", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationRolloutType {
@@ -2798,9 +2642,8 @@ impl serde::Serialize for EvaluationRule {
             struct_ser.serialize_field("rank", &self.rank)?;
         }
         if self.segment_operator != 0 {
-            let v = EvaluationSegmentOperator::try_from(self.segment_operator).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.segment_operator))
-            })?;
+            let v = EvaluationSegmentOperator::try_from(self.segment_operator)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.segment_operator)))?;
             struct_ser.serialize_field("segmentOperator", &v)?;
         }
         if !self.distributions.is_empty() {
@@ -2842,10 +2685,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRule {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -2858,9 +2698,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationRule {
                             "id" => Ok(GeneratedField::Id),
                             "segments" => Ok(GeneratedField::Segments),
                             "rank" => Ok(GeneratedField::Rank),
-                            "segmentOperator" | "segment_operator" => {
-                                Ok(GeneratedField::SegmentOperator)
-                            }
+                            "segmentOperator" | "segment_operator" => Ok(GeneratedField::SegmentOperator),
                             "distributions" => Ok(GeneratedField::Distributions),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -2878,8 +2716,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationRule {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationRule, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut id__ = None;
                 let mut segments__ = None;
@@ -2904,17 +2742,15 @@ impl<'de> serde::Deserialize<'de> for EvaluationRule {
                             if rank__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("rank"));
                             }
-                            rank__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            rank__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                         GeneratedField::SegmentOperator => {
                             if segment_operator__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("segmentOperator"));
                             }
-                            segment_operator__ =
-                                Some(map_.next_value::<EvaluationSegmentOperator>()? as i32);
+                            segment_operator__ = Some(map_.next_value::<EvaluationSegmentOperator>()? as i32);
                         }
                         GeneratedField::Distributions => {
                             if distributions__.is_some() {
@@ -2965,8 +2801,7 @@ impl serde::Serialize for EvaluationSegment {
         if !self.constraints.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.EvaluationSegment", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.EvaluationSegment", len)?;
         if !self.key.is_empty() {
             struct_ser.serialize_field("key", &self.key)?;
         }
@@ -2977,9 +2812,8 @@ impl serde::Serialize for EvaluationSegment {
             struct_ser.serialize_field("description", &self.description)?;
         }
         if self.match_type != 0 {
-            let v = EvaluationSegmentMatchType::try_from(self.match_type).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.match_type))
-            })?;
+            let v = EvaluationSegmentMatchType::try_from(self.match_type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.match_type)))?;
             struct_ser.serialize_field("matchType", &v)?;
         }
         if let Some(v) = self.created_at.as_ref() {
@@ -3033,10 +2867,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegment {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -3069,8 +2900,8 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegment {
             }
 
             fn visit_map<V>(self, mut map_: V) -> std::result::Result<EvaluationSegment, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut key__ = None;
                 let mut name__ = None;
@@ -3103,8 +2934,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegment {
                             if match_type__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("matchType"));
                             }
-                            match_type__ =
-                                Some(map_.next_value::<EvaluationSegmentMatchType>()? as i32);
+                            match_type__ = Some(map_.next_value::<EvaluationSegmentMatchType>()? as i32);
                         }
                         GeneratedField::CreatedAt => {
                             if created_at__.is_some() {
@@ -3137,11 +2967,7 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegment {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.EvaluationSegment",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.EvaluationSegment", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for EvaluationSegmentMatchType {
@@ -3163,7 +2989,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegmentMatchType {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["ALL_SEGMENT_MATCH_TYPE", "ANY_SEGMENT_MATCH_TYPE"];
+        const FIELDS: &[&str] = &[
+            "ALL_SEGMENT_MATCH_TYPE",
+            "ANY_SEGMENT_MATCH_TYPE",
+        ];
 
         struct GeneratedVisitor;
 
@@ -3231,7 +3060,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationSegmentOperator {
     where
         D: serde::Deserializer<'de>,
     {
-        const FIELDS: &[&str] = &["OR_SEGMENT_OPERATOR", "AND_SEGMENT_OPERATOR"];
+        const FIELDS: &[&str] = &[
+            "OR_SEGMENT_OPERATOR",
+            "AND_SEGMENT_OPERATOR",
+        ];
 
         struct GeneratedVisitor;
 
@@ -3315,8 +3147,7 @@ impl serde::Serialize for VariantEvaluationResponse {
         if !self.flag_key.is_empty() {
             len += 1;
         }
-        let mut struct_ser =
-            serializer.serialize_struct("flipt.evaluation.VariantEvaluationResponse", len)?;
+        let mut struct_ser = serializer.serialize_struct("flipt.evaluation.VariantEvaluationResponse", len)?;
         if self.r#match {
             struct_ser.serialize_field("match", &self.r#match)?;
         }
@@ -3324,9 +3155,8 @@ impl serde::Serialize for VariantEvaluationResponse {
             struct_ser.serialize_field("segmentKeys", &self.segment_keys)?;
         }
         if self.reason != 0 {
-            let v = EvaluationReason::try_from(self.reason).map_err(|_| {
-                serde::ser::Error::custom(format!("Invalid variant {}", self.reason))
-            })?;
+            let v = EvaluationReason::try_from(self.reason)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.reason)))?;
             struct_ser.serialize_field("reason", &v)?;
         }
         if !self.variant_key.is_empty() {
@@ -3396,10 +3226,7 @@ impl<'de> serde::Deserialize<'de> for VariantEvaluationResponse {
                 impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
                     type Value = GeneratedField;
 
-                    fn expecting(
-                        &self,
-                        formatter: &mut std::fmt::Formatter<'_>,
-                    ) -> std::fmt::Result {
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(formatter, "expected one of: {:?}", &FIELDS)
                     }
 
@@ -3413,13 +3240,9 @@ impl<'de> serde::Deserialize<'de> for VariantEvaluationResponse {
                             "segmentKeys" | "segment_keys" => Ok(GeneratedField::SegmentKeys),
                             "reason" => Ok(GeneratedField::Reason),
                             "variantKey" | "variant_key" => Ok(GeneratedField::VariantKey),
-                            "variantAttachment" | "variant_attachment" => {
-                                Ok(GeneratedField::VariantAttachment)
-                            }
+                            "variantAttachment" | "variant_attachment" => Ok(GeneratedField::VariantAttachment),
                             "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "requestDurationMillis" | "request_duration_millis" => {
-                                Ok(GeneratedField::RequestDurationMillis)
-                            }
+                            "requestDurationMillis" | "request_duration_millis" => Ok(GeneratedField::RequestDurationMillis),
                             "timestamp" => Ok(GeneratedField::Timestamp),
                             "flagKey" | "flag_key" => Ok(GeneratedField::FlagKey),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3437,12 +3260,9 @@ impl<'de> serde::Deserialize<'de> for VariantEvaluationResponse {
                 formatter.write_str("struct flipt.evaluation.VariantEvaluationResponse")
             }
 
-            fn visit_map<V>(
-                self,
-                mut map_: V,
-            ) -> std::result::Result<VariantEvaluationResponse, V::Error>
-            where
-                V: serde::de::MapAccess<'de>,
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VariantEvaluationResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
             {
                 let mut r#match__ = None;
                 let mut segment_keys__ = None;
@@ -3493,14 +3313,11 @@ impl<'de> serde::Deserialize<'de> for VariantEvaluationResponse {
                         }
                         GeneratedField::RequestDurationMillis => {
                             if request_duration_millis__.is_some() {
-                                return Err(serde::de::Error::duplicate_field(
-                                    "requestDurationMillis",
-                                ));
+                                return Err(serde::de::Error::duplicate_field("requestDurationMillis"));
                             }
-                            request_duration_millis__ = Some(
-                                map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?
-                                    .0,
-                            );
+                            request_duration_millis__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
                         }
                         GeneratedField::Timestamp => {
                             if timestamp__.is_some() {
@@ -3529,10 +3346,6 @@ impl<'de> serde::Deserialize<'de> for VariantEvaluationResponse {
                 })
             }
         }
-        deserializer.deserialize_struct(
-            "flipt.evaluation.VariantEvaluationResponse",
-            FIELDS,
-            GeneratedVisitor,
-        )
+        deserializer.deserialize_struct("flipt.evaluation.VariantEvaluationResponse", FIELDS, GeneratedVisitor)
     }
 }

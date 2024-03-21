@@ -100,21 +100,21 @@ impl Evaluation {
         deserialize(response).await
     }
 
-    fn url(&self, namespace: &str, reference: Option<String>) -> String {
-        match &reference {
-            Some(reference) => {
+    fn url(&self, namespace: &str, reference: String) -> String {
+        match reference.is_empty() {
+            true => {
+                format!(
+                    "{}internal/v1/evaluation/snapshot/namespace/{}",
+                    self.url.as_str(),
+                    namespace
+                )
+            }
+            false => {
                 format!(
                     "{}internal/v1/evaluation/snapshot/namespace/{}?reference={}",
                     self.url.as_str(),
                     namespace,
                     reference,
-                )
-            }
-            None => {
-                format!(
-                    "{}internal/v1/evaluation/snapshot/namespace/{}",
-                    self.url.as_str(),
-                    namespace
                 )
             }
         }

@@ -28,16 +28,16 @@ async fn tests() {
         flag_key: "flag1".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
-        request_id: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
     let boolean_request = EvaluationRequest {
         namespace_key: "default".into(),
         flag_key: "flag_boolean".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
-        request_id: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
 
     let variant = flipt_client
@@ -50,7 +50,7 @@ async fn tests() {
     assert_eq!(variant.variant_key, "variant1");
     assert_eq!(
         EvaluationReason::try_from(variant.reason).expect("valid"),
-        EvaluationReason::Match
+        EvaluationReason::MatchEvaluationReason
     );
     assert_eq!(variant.segment_keys.get(0).unwrap(), "segment1");
 
@@ -63,7 +63,7 @@ async fn tests() {
     assert_eq!(boolean.flag_key, "flag_boolean");
     assert_eq!(
         EvaluationReason::try_from(boolean.reason).expect("valid"),
-        EvaluationReason::Match
+        EvaluationReason::MatchEvaluationReason
     );
 
     let mut requests: Vec<EvaluationRequest> = Vec::new();
@@ -74,14 +74,14 @@ async fn tests() {
         flag_key: "notfound".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
-        request_id: None,
+        reference: "".into(),
+        request_id: "".into(),
     });
 
     let batch_request = BatchEvaluationRequest {
         requests,
-        reference: None,
-        request_id: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
     let batch = flipt_client.evaluation.batch(&batch_request).await.unwrap();
 
@@ -89,9 +89,8 @@ async fn tests() {
     let first_response = batch.responses.get(0).unwrap();
     assert_eq!(
         EvaluationResponseType::try_from(first_response.r#type).expect("valid"),
-        EvaluationResponseType::Variant.into()
+        EvaluationResponseType::VariantEvaluationResponseType
     );
-
     let variant = match first_response.response.clone().unwrap() {
         Response::VariantResponse(r) => r,
         _ => todo!(),
@@ -100,7 +99,7 @@ async fn tests() {
     assert_eq!(variant.variant_key, "variant1");
     assert_eq!(
         EvaluationReason::try_from(variant.reason).expect("valid"),
-        EvaluationReason::Match.into()
+        EvaluationReason::MatchEvaluationReason
     );
     assert_eq!(variant.segment_keys.get(0).unwrap(), "segment1");
 
@@ -108,7 +107,7 @@ async fn tests() {
     let second_response = batch.responses.get(1).unwrap();
     assert_eq!(
         EvaluationResponseType::try_from(second_response.r#type).expect("valid"),
-        EvaluationResponseType::Boolean
+        EvaluationResponseType::BooleanEvaluationResponseType
     );
     let boolean = match second_response.response.clone().unwrap() {
         Response::BooleanResponse(r) => r,
@@ -118,14 +117,14 @@ async fn tests() {
     assert_eq!(boolean.flag_key, "flag_boolean");
     assert_eq!(
         EvaluationReason::try_from(boolean.reason).expect("valid"),
-        EvaluationReason::Match
+        EvaluationReason::MatchEvaluationReason
     );
 
     // Error
     let third_response = batch.responses.get(2).unwrap();
     assert_eq!(
         EvaluationResponseType::try_from(third_response.r#type).expect("valid"),
-        EvaluationResponseType::Error
+        EvaluationResponseType::ErrorEvaluationResponseType
     );
     let error = match third_response.response.clone().unwrap() {
         Response::ErrorResponse(r) => r,
@@ -136,6 +135,6 @@ async fn tests() {
     assert_eq!(error.namespace_key, "default");
     assert_eq!(
         ErrorEvaluationReason::try_from(error.reason).expect("valid"),
-        ErrorEvaluationReason::NotFound
+        ErrorEvaluationReason::NotFoundErrorEvaluationReason
     );
 }
