@@ -1,4 +1,5 @@
 use flipt::api::FliptClient;
+use flipt::evaluation::models::evaluation_response::Response;
 use flipt::evaluation::models::{
     BatchEvaluationRequest, ErrorEvaluationReason, EvaluationReason, EvaluationRequest,
     EvaluationResponseType,
@@ -9,8 +10,8 @@ use url::Url;
 
 #[tokio::test]
 async fn tests() {
-    let url = env::var("FLIPT_URL").unwrap();
-    let token = env::var("FLIPT_AUTH_TOKEN").unwrap();
+    let url = env::var("FLIPT_URL").unwrap_or("http://localhost:8080".into());
+    let token = env::var("FLIPT_AUTH_TOKEN").unwrap_or("".into());
 
     let flipt_client = FliptClient::new(Config::new(
         Url::parse(&url).unwrap(),
@@ -27,14 +28,16 @@ async fn tests() {
         flag_key: "flag1".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
     let boolean_request = EvaluationRequest {
         namespace_key: "default".into(),
         flag_key: "flag_boolean".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
 
     let variant = flipt_client
@@ -45,7 +48,10 @@ async fn tests() {
 
     assert!(variant.r#match);
     assert_eq!(variant.variant_key, "variant1");
-    assert_eq!(variant.reason, EvaluationReason::Match);
+    assert_eq!(
+        EvaluationReason::try_from(variant.reason).expect("valid"),
+        EvaluationReason::MatchEvaluationReason
+    );
     assert_eq!(variant.segment_keys.get(0).unwrap(), "segment1");
 
     let boolean = flipt_client
@@ -55,7 +61,10 @@ async fn tests() {
         .unwrap();
     assert!(boolean.enabled);
     assert_eq!(boolean.flag_key, "flag_boolean");
-    assert_eq!(boolean.reason, EvaluationReason::Match);
+    assert_eq!(
+        EvaluationReason::try_from(boolean.reason).expect("valid"),
+        EvaluationReason::MatchEvaluationReason
+    );
 
     let mut requests: Vec<EvaluationRequest> = Vec::new();
     requests.push(variant_request);
@@ -65,40 +74,67 @@ async fn tests() {
         flag_key: "notfound".into(),
         entity_id: "entity".into(),
         context: context.clone(),
-        reference: None,
+        reference: "".into(),
+        request_id: "".into(),
     });
 
     let batch_request = BatchEvaluationRequest {
         requests,
-        reference: None,
+        reference: "".into(),
+        request_id: "".into(),
     };
     let batch = flipt_client.evaluation.batch(&batch_request).await.unwrap();
 
     // Variant
     let first_response = batch.responses.get(0).unwrap();
-    assert_eq!(first_response.r#type, EvaluationResponseType::Variant);
-
-    let variant = first_response.variant_response.clone().unwrap();
+    assert_eq!(
+        EvaluationResponseType::try_from(first_response.r#type).expect("valid"),
+        EvaluationResponseType::VariantEvaluationResponseType
+    );
+    let variant = match first_response.response.clone().unwrap() {
+        Response::VariantResponse(r) => r,
+        _ => todo!(),
+    };
     assert!(variant.r#match);
     assert_eq!(variant.variant_key, "variant1");
-    assert_eq!(variant.reason, EvaluationReason::Match);
+    assert_eq!(
+        EvaluationReason::try_from(variant.reason).expect("valid"),
+        EvaluationReason::MatchEvaluationReason
+    );
     assert_eq!(variant.segment_keys.get(0).unwrap(), "segment1");
 
     // Boolean
     let second_response = batch.responses.get(1).unwrap();
-    assert_eq!(second_response.r#type, EvaluationResponseType::Boolean);
-
-    let boolean = second_response.boolean_response.clone().unwrap();
+    assert_eq!(
+        EvaluationResponseType::try_from(second_response.r#type).expect("valid"),
+        EvaluationResponseType::BooleanEvaluationResponseType
+    );
+    let boolean = match second_response.response.clone().unwrap() {
+        Response::BooleanResponse(r) => r,
+        _ => todo!(),
+    };
     assert!(boolean.enabled);
     assert_eq!(boolean.flag_key, "flag_boolean");
-    assert_eq!(boolean.reason, EvaluationReason::Match);
+    assert_eq!(
+        EvaluationReason::try_from(boolean.reason).expect("valid"),
+        EvaluationReason::MatchEvaluationReason
+    );
 
     // Error
     let third_response = batch.responses.get(2).unwrap();
-    assert_eq!(third_response.r#type, EvaluationResponseType::Error);
+    assert_eq!(
+        EvaluationResponseType::try_from(third_response.r#type).expect("valid"),
+        EvaluationResponseType::ErrorEvaluationResponseType
+    );
+    let error = match third_response.response.clone().unwrap() {
+        Response::ErrorResponse(r) => r,
+        _ => todo!(),
+    };
 
-    let error = third_response.error_response.clone().unwrap();
     assert_eq!(error.flag_key, "notfound");
     assert_eq!(error.namespace_key, "default");
-    assert_eq!(error.reason, ErrorEvaluationReason::NotFound);
+    assert_eq!(
+        ErrorEvaluationReason::try_from(error.reason).expect("valid"),
+        ErrorEvaluationReason::NotFoundErrorEvaluationReason
+    );
 }

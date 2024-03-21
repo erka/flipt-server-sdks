@@ -3,7 +3,9 @@
 use std::collections::HashMap;
 
 use flipt::api::FliptClient;
-use flipt::evaluation::models::{BatchEvaluationRequest, EvaluationRequest};
+use flipt::evaluation::models::{
+    BatchEvaluationRequest, EvaluationNamespaceSnapshotRequest, EvaluationRequest,
+};
 
 #[tokio::main]
 #[cfg_attr(not(feature = "flipt_integration"), ignore)]
@@ -17,58 +19,73 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let variant_result = client
         .evaluation
         .variant(&EvaluationRequest {
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag1".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
 
-    print!("{:?}", variant_result);
+    println!("{:?}", variant_result);
 
     let boolean_result = client
         .evaluation
         .boolean(&EvaluationRequest {
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag_boolean".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
 
-    print!("{:?}", boolean_result);
+    println!("{:?}", boolean_result);
 
     let requests: Vec<EvaluationRequest> = vec![
         EvaluationRequest {
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag1".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         },
         EvaluationRequest {
+            request_id: "".into(),
             namespace_key: "default".into(),
             flag_key: "flag_boolean".into(),
             entity_id: "entity".into(),
             context: context.clone(),
-            reference: None,
+            reference: "".into(),
         },
     ];
 
     let batch_result = client
         .evaluation
         .batch(&BatchEvaluationRequest {
+            request_id: "".into(),
             requests,
-            reference: None,
+            reference: "".into(),
         })
         .await
         .unwrap();
 
-    print!("{:?}", batch_result);
+    println!("{:?}", batch_result);
+
+    let flags = client
+        .evaluation
+        .list_flags(&EvaluationNamespaceSnapshotRequest {
+            key: "default".into(),
+            reference: "".into(),
+        })
+        .await
+        .unwrap();
+    println!("{:?}", flags);
 
     Ok(())
 }

@@ -1,0 +1,20 @@
+version: v1
+plugins:
+  - plugin: prost # Generates the core code
+    out: src/evaluation
+    opt:
+      - bytes=.
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+      - file_descriptor_set
+  - plugin: prost-serde # Generates code compatible with JSON serde
+    out: src/evaluation
+    opt:
+      - extern_path=.google.protobuf=::pbjson_types
+  - plugin: tonic # Generates the Tonic services
+    out: src/evaluation
+    opt:
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+      - no_server=true
+      - client_mod_attribute=.=#[cfg(feature = "grpc")]
