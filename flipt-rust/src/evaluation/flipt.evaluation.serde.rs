@@ -483,8 +483,8 @@ impl serde::Serialize for ErrorEvaluationReason {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::UnknownErrorEvaluationReason => "UNKNOWN_ERROR_EVALUATION_REASON",
-            Self::NotFoundErrorEvaluationReason => "NOT_FOUND_ERROR_EVALUATION_REASON",
+            Self::Unknown => "UNKNOWN_ERROR_EVALUATION_REASON",
+            Self::NotFound => "NOT_FOUND_ERROR_EVALUATION_REASON",
         };
         serializer.serialize_str(variant)
     }
@@ -538,12 +538,8 @@ impl<'de> serde::Deserialize<'de> for ErrorEvaluationReason {
                 E: serde::de::Error,
             {
                 match value {
-                    "UNKNOWN_ERROR_EVALUATION_REASON" => {
-                        Ok(ErrorEvaluationReason::UnknownErrorEvaluationReason)
-                    }
-                    "NOT_FOUND_ERROR_EVALUATION_REASON" => {
-                        Ok(ErrorEvaluationReason::NotFoundErrorEvaluationReason)
-                    }
+                    "UNKNOWN_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::Unknown),
+                    "NOT_FOUND_ERROR_EVALUATION_REASON" => Ok(ErrorEvaluationReason::NotFound),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -1791,10 +1787,10 @@ impl serde::Serialize for EvaluationReason {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::UnknownEvaluationReason => "UNKNOWN_EVALUATION_REASON",
-            Self::FlagDisabledEvaluationReason => "FLAG_DISABLED_EVALUATION_REASON",
-            Self::MatchEvaluationReason => "MATCH_EVALUATION_REASON",
-            Self::DefaultEvaluationReason => "DEFAULT_EVALUATION_REASON",
+            Self::Unknown => "UNKNOWN_EVALUATION_REASON",
+            Self::FlagDisabled => "FLAG_DISABLED_EVALUATION_REASON",
+            Self::Match => "MATCH_EVALUATION_REASON",
+            Self::Default => "DEFAULT_EVALUATION_REASON",
         };
         serializer.serialize_str(variant)
     }
@@ -1850,12 +1846,10 @@ impl<'de> serde::Deserialize<'de> for EvaluationReason {
                 E: serde::de::Error,
             {
                 match value {
-                    "UNKNOWN_EVALUATION_REASON" => Ok(EvaluationReason::UnknownEvaluationReason),
-                    "FLAG_DISABLED_EVALUATION_REASON" => {
-                        Ok(EvaluationReason::FlagDisabledEvaluationReason)
-                    }
-                    "MATCH_EVALUATION_REASON" => Ok(EvaluationReason::MatchEvaluationReason),
-                    "DEFAULT_EVALUATION_REASON" => Ok(EvaluationReason::DefaultEvaluationReason),
+                    "UNKNOWN_EVALUATION_REASON" => Ok(EvaluationReason::Unknown),
+                    "FLAG_DISABLED_EVALUATION_REASON" => Ok(EvaluationReason::FlagDisabled),
+                    "MATCH_EVALUATION_REASON" => Ok(EvaluationReason::Match),
+                    "DEFAULT_EVALUATION_REASON" => Ok(EvaluationReason::Default),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
@@ -2218,9 +2212,9 @@ impl serde::Serialize for EvaluationResponseType {
         S: serde::Serializer,
     {
         let variant = match self {
-            Self::VariantEvaluationResponseType => "VARIANT_EVALUATION_RESPONSE_TYPE",
-            Self::BooleanEvaluationResponseType => "BOOLEAN_EVALUATION_RESPONSE_TYPE",
-            Self::ErrorEvaluationResponseType => "ERROR_EVALUATION_RESPONSE_TYPE",
+            Self::Variant => "VARIANT_EVALUATION_RESPONSE_TYPE",
+            Self::Boolean => "BOOLEAN_EVALUATION_RESPONSE_TYPE",
+            Self::Error => "ERROR_EVALUATION_RESPONSE_TYPE",
         };
         serializer.serialize_str(variant)
     }
@@ -2275,15 +2269,9 @@ impl<'de> serde::Deserialize<'de> for EvaluationResponseType {
                 E: serde::de::Error,
             {
                 match value {
-                    "VARIANT_EVALUATION_RESPONSE_TYPE" => {
-                        Ok(EvaluationResponseType::VariantEvaluationResponseType)
-                    }
-                    "BOOLEAN_EVALUATION_RESPONSE_TYPE" => {
-                        Ok(EvaluationResponseType::BooleanEvaluationResponseType)
-                    }
-                    "ERROR_EVALUATION_RESPONSE_TYPE" => {
-                        Ok(EvaluationResponseType::ErrorEvaluationResponseType)
-                    }
+                    "VARIANT_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Variant),
+                    "BOOLEAN_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Boolean),
+                    "ERROR_EVALUATION_RESPONSE_TYPE" => Ok(EvaluationResponseType::Error),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }

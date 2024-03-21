@@ -253,10 +253,10 @@ pub struct EvaluationNamespaceSnapshotRequest {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum EvaluationReason {
-    UnknownEvaluationReason = 0,
-    FlagDisabledEvaluationReason = 1,
-    MatchEvaluationReason = 2,
-    DefaultEvaluationReason = 3,
+    Unknown = 0,
+    FlagDisabled = 1,
+    Match = 2,
+    Default = 3,
 }
 impl EvaluationReason {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -265,19 +265,19 @@ impl EvaluationReason {
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            EvaluationReason::UnknownEvaluationReason => "UNKNOWN_EVALUATION_REASON",
-            EvaluationReason::FlagDisabledEvaluationReason => "FLAG_DISABLED_EVALUATION_REASON",
-            EvaluationReason::MatchEvaluationReason => "MATCH_EVALUATION_REASON",
-            EvaluationReason::DefaultEvaluationReason => "DEFAULT_EVALUATION_REASON",
+            EvaluationReason::Unknown => "UNKNOWN_EVALUATION_REASON",
+            EvaluationReason::FlagDisabled => "FLAG_DISABLED_EVALUATION_REASON",
+            EvaluationReason::Match => "MATCH_EVALUATION_REASON",
+            EvaluationReason::Default => "DEFAULT_EVALUATION_REASON",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "UNKNOWN_EVALUATION_REASON" => Some(Self::UnknownEvaluationReason),
-            "FLAG_DISABLED_EVALUATION_REASON" => Some(Self::FlagDisabledEvaluationReason),
-            "MATCH_EVALUATION_REASON" => Some(Self::MatchEvaluationReason),
-            "DEFAULT_EVALUATION_REASON" => Some(Self::DefaultEvaluationReason),
+            "UNKNOWN_EVALUATION_REASON" => Some(Self::Unknown),
+            "FLAG_DISABLED_EVALUATION_REASON" => Some(Self::FlagDisabled),
+            "MATCH_EVALUATION_REASON" => Some(Self::Match),
+            "DEFAULT_EVALUATION_REASON" => Some(Self::Default),
             _ => None,
         }
     }
@@ -285,8 +285,8 @@ impl EvaluationReason {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ErrorEvaluationReason {
-    UnknownErrorEvaluationReason = 0,
-    NotFoundErrorEvaluationReason = 1,
+    Unknown = 0,
+    NotFound = 1,
 }
 impl ErrorEvaluationReason {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -295,19 +295,15 @@ impl ErrorEvaluationReason {
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            ErrorEvaluationReason::UnknownErrorEvaluationReason => {
-                "UNKNOWN_ERROR_EVALUATION_REASON"
-            }
-            ErrorEvaluationReason::NotFoundErrorEvaluationReason => {
-                "NOT_FOUND_ERROR_EVALUATION_REASON"
-            }
+            ErrorEvaluationReason::Unknown => "UNKNOWN_ERROR_EVALUATION_REASON",
+            ErrorEvaluationReason::NotFound => "NOT_FOUND_ERROR_EVALUATION_REASON",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "UNKNOWN_ERROR_EVALUATION_REASON" => Some(Self::UnknownErrorEvaluationReason),
-            "NOT_FOUND_ERROR_EVALUATION_REASON" => Some(Self::NotFoundErrorEvaluationReason),
+            "UNKNOWN_ERROR_EVALUATION_REASON" => Some(Self::Unknown),
+            "NOT_FOUND_ERROR_EVALUATION_REASON" => Some(Self::NotFound),
             _ => None,
         }
     }
@@ -315,9 +311,9 @@ impl ErrorEvaluationReason {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum EvaluationResponseType {
-    VariantEvaluationResponseType = 0,
-    BooleanEvaluationResponseType = 1,
-    ErrorEvaluationResponseType = 2,
+    Variant = 0,
+    Boolean = 1,
+    Error = 2,
 }
 impl EvaluationResponseType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -326,21 +322,17 @@ impl EvaluationResponseType {
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            EvaluationResponseType::VariantEvaluationResponseType => {
-                "VARIANT_EVALUATION_RESPONSE_TYPE"
-            }
-            EvaluationResponseType::BooleanEvaluationResponseType => {
-                "BOOLEAN_EVALUATION_RESPONSE_TYPE"
-            }
-            EvaluationResponseType::ErrorEvaluationResponseType => "ERROR_EVALUATION_RESPONSE_TYPE",
+            EvaluationResponseType::Variant => "VARIANT_EVALUATION_RESPONSE_TYPE",
+            EvaluationResponseType::Boolean => "BOOLEAN_EVALUATION_RESPONSE_TYPE",
+            EvaluationResponseType::Error => "ERROR_EVALUATION_RESPONSE_TYPE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "VARIANT_EVALUATION_RESPONSE_TYPE" => Some(Self::VariantEvaluationResponseType),
-            "BOOLEAN_EVALUATION_RESPONSE_TYPE" => Some(Self::BooleanEvaluationResponseType),
-            "ERROR_EVALUATION_RESPONSE_TYPE" => Some(Self::ErrorEvaluationResponseType),
+            "VARIANT_EVALUATION_RESPONSE_TYPE" => Some(Self::Variant),
+            "BOOLEAN_EVALUATION_RESPONSE_TYPE" => Some(Self::Boolean),
+            "ERROR_EVALUATION_RESPONSE_TYPE" => Some(Self::Error),
             _ => None,
         }
     }
